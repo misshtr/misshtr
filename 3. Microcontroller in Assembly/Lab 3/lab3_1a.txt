@@ -1,0 +1,21 @@
+.global _start
+_start:
+
+
+
+BAL q_1_a		//reset counter
+return:
+
+
+
+
+
+q_1_a:	
+
+		MOV R2, #0
+		MOV R0, #0x1c000000
+		ADD R1, R0, #4
+		STR R2, [R0]
+		STR R2, [R1]
+BAL 		return
+		

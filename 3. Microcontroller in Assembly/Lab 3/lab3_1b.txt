@@ -1,0 +1,26 @@
+.global _start
+_start:
+
+
+
+BAL q_1_b		//increment counter+1
+return:
+
+
+
+
+
+q_1_b:	
+		CF = 0	
+		LDR R0, =0x1c000000
+		LDR R1, =0x1c000004
+		LDR R3, [R1]
+		LDR R2, [R0]
+		ADD R3, R3, #1
+		ADC R2, R2, #0
+		STR R3, [R1]
+		STR R2, [R0]
+		
+
+BAL 		return
+		

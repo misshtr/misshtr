@@ -1,0 +1,105 @@
+.global _start
+_start:
+
+ENABLE_MPP_25_AS_GPIO:
+	ldr r1, =0xF101800C
+	mov r0, #0x000000F0
+	ldr r2, [r1]
+	bic r2, r0
+	str r2, [r1]
+	
+
+MAIN:
+	LDR R0, =0x17D7840	//25M
+	LDR R1, =0x1DCD650	//31.25M
+	LDR R2, =0xF102031C 	// address of GT1
+	LDR R3, =0xF1020324	// address of GT2
+	LDR R4, =0xF1020318	//GT1 reload reg
+	LDR R5, =0xF1020320 	//GT2 reload reg
+	LDR R6, =0x303C 	// value for control reg
+	LDR R13, =0xF1020300	// address of control reg
+	MOV R5, #0		//flag1
+	LDR R12, =0xF1018130	//address of data out set reg.
+	LDR R10, =0xF101812C 	//address of data enable clear reg.
+	LDR R11, = 0xF1018134	//address of data out clear register
+	STR R0, [R2]		//25M into GT1
+	STR R1, [R3]		//31.25M into GT2
+	STR R0, [R4]		//25M into GT1 reload
+	STR R1, [R5]		//31.25M into GT2 reload
+	LDR R8, =0x20000000	//value of 29th LED 
+	LDR R7, =0x2000000	//value to turn LED on (25th pin)
+	ADD R0, R8, R7
+	STR R0, [R10]		//keep low on 25 and 29
+	STR R6, [R13] 		//enables countdown
+	
+	
+	
+while:
+	LDR R1, [R3]
+	LDR R0, [R2]
+	AND R4, R1, R2	
+	CMP R4, #0
+	BEQ which
+	BNE while
+	
+
+
+which:
+	ORR R4, R1, R0	//both have to be 0 for R4 to be 0
+	CMP R4, #0
+	BEQ both
+	CMP R0, #0	//GT1
+	BEQ led1
+	CMP R1, #0	//GT2
+	BEQ led2
+	
+
+both:
+	CMP R5, #2
+	STREQ R8, [R11]		//turns off 29th
+	STREQ R7, [R12]		//turns on 25th
+	MOVEQ R5, #1
+	CMP R5, #3
+	MOVEQ R0, #0
+	STREQ R0, [R12]
+	LDREQ R0, =0x22000000
+	STREQ R0, [R11]		//turns both off at same time
+	MOVEQ R5, #0
+	CMP R5, #1
+	STREQ R7, [R11] 	//turn off 25th
+	STREQ R8, [R12] 	//turn on 29th
+	MOVEQ R5, #2
+	CMP R5, #0
+	MOVEQ R0, #0
+	STREQ R0, [R11] 	//clearing data out clear reg
+	LDREQ R0, =0x22000000
+	STREQ R0, [R12]		//turns both lights on
+	MOVEQ R5, #3
+	bl while
+
+led1:
+	CMP R5, #0
+	STREQ R7, [R12]		//turns on 25th
+	ADDEQ R5, #1
+	LDRNE R0, [R12]
+	SUBNE R0, R0, R7
+	STRNE R0, [R12]
+	STRNE R7, [R11]
+	SUBNE R5, #1
+	BL while
+
+led2:
+	CMP R5, #0
+	STREQ R8, [R12]
+	ADDEQ R5, #2
+	LDRNE R0, [R12]
+	SUBNE R0, R0, R8
+	STRNE R0, [R12]
+	STRNE R8, [R11]
+	SUBNE R5, #2
+	BL while
+	
+	
+	 
+	
+	

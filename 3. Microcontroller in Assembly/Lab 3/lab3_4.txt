@@ -1,0 +1,29 @@
+.global _start
+_start:
+
+MOV LR, PC
+BAL func_4		// calculates n!
+
+
+
+
+
+func_4:
+	PUSH {LR}
+	CMP R0, #1
+	BEQ equal
+	MOV R1, R0
+	PUSH {R1}
+	SUB R0, R0, #1
+	MOV LR, PC
+	BAL func_4
+	POP {R1}
+	MOV R2, R0
+	MUL R0, R1, R2
+	POP {LR}
+	MOV PC, LR
+	
+equal:
+	MOV R1, #1
+	POP {LR}
+	MOV PC, LR

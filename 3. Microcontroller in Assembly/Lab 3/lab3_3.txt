@@ -1,0 +1,66 @@
+.global _start
+_start:
+
+
+BAL func_3		// calculates sum n^k
+equal:
+
+
+func_3: 
+
+	
+	MOV R3, #0		// counter of k
+	MOV R4, #0		// overall sum	
+	MOV R5, #0		// will hold each individual n^k
+loop1:
+	CMP R3, R1
+	BEQ equal
+	BAL func_2
+done:
+	ADD R4, R4, R5		// add to overall sum
+	MOV R5, #0
+	ADD R3, R3, #1		//increment counter
+	BAL loop1
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+func_2:
+	CMP R3, #0		// functions as k(i) for scope of function
+	BEQ ex_case1
+	CMP R3, #1
+	BEQ ex_case2
+	MUL R5, R0, R0		// holds result of multiplication until done k times
+	MOV R6, #2		// counter
+loop2:
+	CMP R3, R6
+	BEQ done
+	MUL R5, R5, R0		//n*n
+	ADD R6, R6, #1		//increment counter until done k times
+	BAL loop2
+ex_case1:
+	MOV R5, #1
+	BAL done
+ex_case2:
+	MOV R5, R0
+	BAL done	
+
+	
+
+
+
+	

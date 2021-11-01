@@ -1,0 +1,14 @@
+.global _start
+_start:	
+
+		MOV		R4, #45056	//creating B
+		MOV		R2, #52		//creating 34
+		MOV		R6, #18		//creating 12
+		LSL		R6, R6, #8
+		ADD		R6, R6, R2	//creating 1234
+		MOV		R7, #205 		//creating CD
+		MOV		R8, #171		//creating AB
+		LSL		R8, R8, #8
+		ADD		R8, R8, R7	//creating ABCD
+		LSL		R8, R8, #16
+		ADD		R5, R8, R6	//creating ABCD1234

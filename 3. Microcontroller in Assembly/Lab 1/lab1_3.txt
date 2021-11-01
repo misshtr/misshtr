@@ -1,0 +1,46 @@
+.global _start
+_start:			
+
+			MOV		R0, #0		//2^40 in HEX 32bits are zeros
+			MOV		R3, #256	
+			MOV		R4, #0
+			CMP		R4,R0		//compare to check if divides
+			MOVNE		R10, #-1	
+			BNE		no_divide			//enter if r4=r0
+			MOV		R1, #0		
+			ADD		R1, R3, R0	//to test on r3
+			LSL		R1, R1, #24	//shift left for everything but the head of num
+			CMP		R1, R0		//check for zeros
+			MOVNE		R10, #-1
+			BNE		not_divide	//enter if r1=r0
+			MOV		R1, #0
+			ADD		R1, R3, R0	//to test on r3
+			LSR		R1, R1, #8	//shift right for the head of num
+			CMP		R1,R0		//check for num>0
+			MOVEQ		R10, #-1		//if r1=0, it doesn’t divide
+			BEQ		nope_divide
+			MOV		R0, #1
+			MOV		R1, #1
+			MOV		R2, #1
+			MOV		R8, #1
+			MOV		R9, #1
+			MOV		R5, #1
+			MOV		R6, #1
+			MOV		R7, #1
+			LSL		R1, R1, #4
+			LSL		R2, R2, #8
+			LSL		R8, R8, #12
+			LSL		R9, R9, #16
+			LSL		R5, R5, #20
+			LSL		R6, R6, #24
+			LSL		R7, R7, #28
+			ADD		R10, R0, R1
+			ADD		R10, R10, R2
+			ADD		R10, R10, R8
+			ADD		R10, R10, R9
+			ADD		R10, R10, R5
+			ADD		R10, R10, R6
+			ADD		R10, R10, R7
+no_divide:
+not_divide:
+nope_divide:

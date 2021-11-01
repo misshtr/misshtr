@@ -1,0 +1,21 @@
+.global _start
+_start:
+
+
+
+BAL q_1_c		// return counter
+return:
+
+
+
+
+
+q_1_c:	
+
+		LDR R0, =0x1c000000
+		LDR R1, =0x1c000004
+		LDR R10, [R0]
+		LDR R11, [R1]
+		
+
+BAL 		return

@@ -1,0 +1,30 @@
+.global _start
+_start:
+
+
+BAL func_2		// calculates n^k
+equal:
+done:
+
+
+
+func_2: 
+
+	CMP R1, #0
+	BEQ ex_case
+	MUL R3, R0, R0		// holds result of multiplication until done k times
+	MOV R2, #2		// counter
+loop:
+	CMP R1, R2
+	BEQ equal
+	MUL R3, R3, R0		//n*n
+	ADD R2, R2, #1		//increment counter until done k times
+	BAL loop
+ex_case:
+	MOV R3,#1
+	BAL done
+
+
+	
+	
+	

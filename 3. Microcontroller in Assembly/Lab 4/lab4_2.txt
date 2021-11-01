@@ -1,0 +1,68 @@
+.global _start
+_start:
+
+ENABLE_MPP_25_AS_GPIO:
+	ldr r1, =0xF101800C
+	mov r0, #0x000000F0
+	ldr r2, [r1]
+	bic r2, r0
+	str r2, [r1]
+	
+
+MAIN:	
+	LDR R7, =0x2000000	//value to turn LED on (25th pin)
+	LDR R2, =0x1004  	//value calculated for global timers control register
+	LDR R5, =0xF1018130	//address of data out set reg.
+	LDR R10, =0xF101812C 	//address of data enable set reg.
+	MOV R4, #0 		//counter
+	STR R7, [R10]		//keep low in 25th pin
+	MOV R6, #1		//for later use to check even/odd
+	LDR R0, =0xF102031C     //address of GT1 reg
+	LDR R1, =0x17D7840      // value of 25M
+	LDR R12, =0x17D7840
+	STR R1, [R0]		//put 25M into GT1
+	LDR R3, =0xF1020300	//address of global timers control register
+	LDR R11, = 0xF1018134	//address of data out clear register
+	BL skip 
+loop:
+	ADD R4, R4, #1		// increment counter
+	AND R8, R4, R6		//checks even/odd
+	CMP R8, #0
+	STRNE R1, [R0] 
+	ADDEQ R1, R1, R12	// increment by 25M
+	STREQ R1, [R0]
+	
+	
+		
+	
+	
+	
+skip:	
+	STR R2, [R3] 		// enables countdown
+
+while:
+	LDR R9, [R0]
+	CMP R9, #0
+	BNE while		//allows for countdown	
+	
+
+	AND R8, R4, R6		//checks if to turn off or on led
+	CMP R8, #0
+	STREQ R9, [R11]
+	STREQ R7, [R5]		//even-turn on
+	STRNE R9, [R5]
+	STRNE R7, [R11]		//odd- turn off
+	CMP R4, #20		//iterate 20 times
+	BNE loop
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+	
+

@@ -1,0 +1,36 @@
+.global _start
+_start:	
+
+		MOV		R10, #0
+		MOV		R0, #0
+		CMP		R6, R0
+		blt		less		//enter if r6 isn’t negative
+		MOVEQ 		R10, #-1		//if equal to zero
+		MOVGT 		R10, #-1 		//if greater than zero
+		bgt		greater		//enter if r6 =0
+		beq		equal		//enter if r6 >0
+less:
+		MOV		R0, #1
+		MOV		R1, #1
+		MOV		R2, #1
+		MOV		R3, #1
+		MOV		R4, #1
+		MOV		R5, #1
+		MOV		R6, #1
+		MOV		R7, #1
+		LSL		R1, R1, #4
+		LSL		R2, R2, #8
+		LSL		R3, R3, #12
+		LSL		R4, R4, #16
+		LSL		R5, R5, #20
+		LSL		R6, R6, #24
+		LSL		R7, R7, #28
+		ADD		R10, R0, R1
+		ADD		R10, R10, R2
+		ADD		R10, R10, R3
+		ADD		R10, R10, R4
+		ADD		R10, R10, R5
+		ADD		R10, R10, R6
+		ADD		R10, R10, R7
+greater:
+equal:

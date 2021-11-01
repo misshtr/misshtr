@@ -1,0 +1,67 @@
+.global _start
+_start:
+
+ENABLE_MPP_25_AS_GPIO:
+	ldr r1, =0xF101800C
+	mov r0, #0x000000F0
+	ldr r2, [r1]
+	bic r2, r0
+	str r2, [r1]
+	
+
+MAIN:
+	
+//FROM 32BIT WORD INTO 16BIT
+	ldr r10, =0xFFFF
+	AND R6, R10, R3
+	LSR R3, R3, #16
+	AND R5, R10, R3
+	EOR R4, R5, R6
+//FROM 16BIT WORD INTO 8BIT
+	ldr r10, =0xFF
+	AND R6, R10, R4
+	LSR R4, R4, #8
+	AND R5, R10, R4
+	EOR R4, R5, R6
+//FROM 8BIT WORD INTO 4BIT
+	ldr r10, =0xF
+	AND R6, R10, R4
+	LSR R4, R4, #4
+	AND R5, R10, R4
+	EOR R4, R5, R6
+//FROM 4BIT WORD INTO 2BIT
+	ldr r10, =0x3
+	AND R6, R10, R4
+	LSR R4, R4, #2
+	AND R5, R10, R4
+	EOR R4, R5, R6
+//FROM 2BIT WORD INTO 1BIT
+	ldr r10, =0x1
+	AND R6, R10, R4
+	LSR R4, R4, #1
+	AND R5, R10, R4
+	EOR R4, R5, R6
+
+
+	
+
+	LDR R3, =0xF101812C	//address of data out clear reg (ONE)
+	LDR R5, =0xF1018130 	//address of data out set reg. (ONE)
+
+
+	CMP R4, #0		//even or odd parity bit?
+
+	BNE	not_equal
+	LDR R10, =0x2000000
+	STR R10, [R3]	
+	STR R10, [R5]
+not_equal:
+	BEQ	equal
+	LDR R10, =0x20000000
+	STR R10, [R3]	
+	STR R10, [R5]
+equal:
+	
+	
+	
+	
